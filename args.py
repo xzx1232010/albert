@@ -6,18 +6,18 @@ tf.logging.set_verbosity(tf.logging.INFO)
 file_path = os.path.dirname(__file__)
 
 
-#模型目录
+# 模型目录
 model_dir = os.path.join(file_path, 'albert_lcqmc_checkpoints/')
 
-#config文件
+# config文件
 config_name = os.path.join(file_path, 'albert_config/albert_config_tiny.json')
-#ckpt文件名称
+# ckpt文件名称
 ckpt_name = os.path.join(model_dir, 'model.ckpt')
-#输出文件目录
+# 输出文件目录
 output_dir = os.path.join(file_path, 'albert_lcqmc_checkpoints/')
-#vocab文件目录
+# vocab文件目录
 vocab_file = os.path.join(file_path, 'albert_config/vocab.txt')
-#数据目录
+# 数据目录
 data_dir = os.path.join(file_path, 'data/')
 
 num_train_epochs = 10

@@ -33,6 +33,8 @@ class SimProcessor(DataProcessor):
 """
 模型类，负责载入checkpoint初始化模型
 """
+
+
 class BertSim:
     def __init__(self, batch_size=args.batch_size):
         self.mode = None
@@ -43,12 +45,9 @@ class BertSim:
         self.processor = SimProcessor()
         tf.logging.set_verbosity(tf.logging.INFO)
 
-
-
-    #载入estimator,构造模型
+    # 载入estimator,构造模型
     def start_model(self):
         self.estimator = self.get_estimator()
-
 
     def model_fn_builder(self, bert_config, num_labels, init_checkpoint, learning_rate,
                          num_train_steps, num_warmup_steps,
@@ -165,25 +164,6 @@ class BertSim:
             # Account for [CLS] and [SEP] with "- 2"
             if len(tokens_a) > max_seq_length - 2:
                 tokens_a = tokens_a[0:(max_seq_length - 2)]
-
-        # The convention in BERT is:
-        # (a) For sequence pairs:
-        #  tokens:   [CLS] is this jack ##son ##ville ? [SEP] no it is not . [SEP]
-        #  type_ids: 0     0  0    0    0     0       0 0     1  1  1  1   1 1
-        # (b) For single sequences:
-        #  tokens:   [CLS] the dog is hairy . [SEP]
-        #  type_ids: 0     0   0   0  0     0 0
-        #
-        # Where "type_ids" are used to indicate whether this is the first
-        # sequence or the second sequence. The embedding vectors for `type=0` and
-        # `type=1` were learned during pre-training and are added to the wordpiece
-        # embedding vector (and position vector). This is not *strictly* necessary
-        # since the [SEP] token unambiguously separates the sequences, but it makes
-        # it easier for the model to learn the concept of sequences.
-        #
-        # For classification tasks, the first vector (corresponding to [CLS]) is
-        # used as as the "sentence vector". Note that this only makes sense because
-        # the entire model is fine-tuned.
         tokens = []
         segment_ids = []
         tokens.append("[CLS]")
@@ -234,8 +214,6 @@ class BertSim:
             segment_ids=segment_ids,
             label_id=label_id)
         return feature
-
-
 
 
 def input_fn_builder(bertSim,sentences):
