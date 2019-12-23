@@ -7,21 +7,25 @@ file_path = os.path.dirname(__file__)
 
 
 # 模型目录
-model_dir = os.path.join(file_path, 'albert_lcqmc_checkpoints/')
+model_dir = './albert_lcqmc_checkpoints/'
 
 # config文件
-config_name = os.path.join(file_path, 'albert_config/albert_config_tiny.json')
+config_name = './albert_tiny/albert_config_tiny.json'
+
 # ckpt文件名称
 ckpt_name = os.path.join(model_dir, 'model.ckpt')
+
 # 输出文件目录
-output_dir = os.path.join(file_path, 'albert_lcqmc_checkpoints/')
+output_dir = './albert_lcqmc_checkpoints/'
+
 # vocab文件目录
-vocab_file = os.path.join(file_path, 'albert_config/vocab.txt')
+vocab_file = './albert_config/vocab.txt'
+
 # 数据目录
-data_dir = os.path.join(file_path, 'data/')
+data_dir = './lcqmc'
 
 num_train_epochs = 10
-batch_size = 128
+batch_size = 1
 learning_rate = 0.00005
 
 # gpu使用率

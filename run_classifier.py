@@ -88,6 +88,12 @@ flags.DEFINE_float("learning_rate", 5e-5, "The initial learning rate for Adam.")
 flags.DEFINE_float("num_train_epochs", 3.0,
                    "Total number of training epochs to perform.")
 
+# 是否导出save_model格式模型文件
+flags.DEFINE_bool("do_export", False, "Whether to export the model.")
+
+# 导出save_model格式模型文件的输出路径
+flags.DEFINE_string("export_dir", None, "The dir where the exported model will be written.")
+
 # 学习率预热，简单来说就是先使用一个较小的学习率，先迭代几个epoch，等到模型基本稳定的时候再用初始设置的学习率进行训练。
 # 原因：当我们开始训练模型的时候，往往模型的参数都是随机初始化的，并不能代表什么，所以如果此时选择一个较大的学习率，往往会导致模型的不稳定
 flags.DEFINE_float(
@@ -733,6 +739,20 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
     return features
 
 
+def serving_input_fn():
+    label_ids = tf.placeholder(tf.int32, [None], name='label_ids')
+    input_ids = tf.placeholder(tf.int32, [None, FLAGS.max_seq_length], name='input_ids')
+    input_mask = tf.placeholder(tf.int32, [None, FLAGS.max_seq_length], name='input_mask')
+    segment_ids = tf.placeholder(tf.int32, [None, FLAGS.max_seq_length], name='segment_ids')
+    input_fn = tf.estimator.export.build_raw_serving_input_receiver_fn({
+        'label_ids': label_ids,
+        'input_ids': input_ids,
+        'input_mask': input_mask,
+        'segment_ids': segment_ids,
+    })()
+    return input_fn
+
+
 def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -969,6 +989,10 @@ def main(_):
                 writer.write(output_line)
                 num_written_lines += 1
         assert num_written_lines == num_actual_predict_examples
+    # 导出save_model格式模型
+    if FLAGS.do_export:
+        estimator._export_to_tpu = False
+        estimator.export_savedmodel(FLAGS.export_dir, serving_input_fn)
 
 
 if __name__ == "__main__":
